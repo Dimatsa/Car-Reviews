@@ -55,7 +55,7 @@ MongoClient.connect(connectionString, {
         const update = { $push: { reviews: review } };
         const options = {
             projection: { "make": 1, "model": 1, "reviews": 1 },
-            returnNewDocument: true
+            returnOriginal: false
         };
 
         cars.findOneAndUpdate(filter, update, options,
