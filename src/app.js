@@ -28,9 +28,11 @@ MongoClient.connect(connectionString, {
     app.get('/cars', (req, res, next) => {
         const make = req.query.make;
         const model = req.query.model;
-        cars.findOne(
-            { $and: [{ "make": make }, { "model": model }] },
-            { "make": 1, "model": 1, "reviews": 1 })
+
+        const query = { $and: [{ "make": make }, { "model": model }] };
+        const projection = { "make": 1, "model": 1, "reviews": 1 };
+
+        cars.findOne(query, projection)
             .then(result => {
                 if (result) {
                     console.log(`Found ${result.make} ${result.model} in database`);
@@ -48,18 +50,21 @@ MongoClient.connect(connectionString, {
         const make = req.body.make;
         const model = req.body.model;
         const review = req.body.review;
-        cars.findOneAndUpdate(
-            { $and: [{ "make": make }, { "model": model }] },
-            { $push: { reviews: review } },
-            {
-                projection: { "make": 1, "model": 1, "reviews": 1 },
-                returnNewDocument: true
-            },
+
+        const filter = { $and: [{ "make": make }, { "model": model }] };
+        const update = { $push: { reviews: review } };
+        const options = {
+            projection: { "make": 1, "model": 1, "reviews": 1 },
+            returnNewDocument: true
+        };
+
+        cars.findOneAndUpdate(filter, update, options,
             (err, doc) => {
                 if (err) { throw err }
                 else if (!doc.value) {
                     cars.insertOne({ "make": make, "model": model, "reviews": [review] });
                 }
+
                 console.log(`Added review for ${make} ${model} in database`);
 
                 if (doc.value) {
@@ -73,14 +78,4 @@ MongoClient.connect(connectionString, {
     app.listen(PORT, () => {
         console.log(`Listening on port ${PORT}`);
     });
-
 });
-
-const getReviewString = (reviews) => {
-    let reviewString = '';
-    reviews.forEach(element => {
-        reviewString += element;
-        reviewString += '\n';
-    });
-    return reviewString;
-}
