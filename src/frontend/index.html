@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Car Reviews</title>
+</head>
+
+<body>
+    <h1>Car Reviews</h1>
+    <p>This website allows you to view and create reviews for various cars!</p>
+    <p>Use the form below to search for a car:</p>
+    <form action="/cars" method="GET">
+        <input type="text" placeholder="Make (ex. Porsche)" name="make" required>
+        <input type="text" placeholder="Model (ex. 911)" name="model" required>
+        <button type="submit">Find Car</button>
+    </form>
+    <p>Write your own review for a car:</p>
+    <form action="/cars" method="POST">
+        <input type="text" placeholder="Make (ex. Toyota)" name="make" required>
+        <input type="text" placeholder="Model (ex. Sienna)" name="model" required>
+        <br/>
+        <br/>
+        <textarea placeholder="Your review" name="review" required></textarea>
+        <br/>
+        <br/>
+        <button type="submit">Add Review</button>
+    </form>
+</body>
+
+</html>
